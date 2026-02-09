@@ -1,43 +1,97 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluentLatino - ESL Coach</title>
 
-  <title>FluentLatino</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <link rel="manifest" href="manifest.json" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <meta name="theme-color" content="#1e88e5" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #2e1065 0%, #4c1d95 100%);
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+      }
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      background: #ffffff;
-    }
+      .sparkle-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
-</head>
+      .sparkle {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0;
+        animation: twinkle var(--duration) infinite;
+      }
 
-<body>
-  <iframe 
-    src="https://ai.studio/apps/drive/1UZ_G84r1wsrhuW7yI9wap6Wdofd9YuQD?fullscreenApplet=true"
-    allow="microphone; camera"
-  ></iframe>
+      @keyframes twinkle {
+        0%,
+        100% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+      }
 
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
-    }
-  </script>
-</body>
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+    </style>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.2.0",
+          "react-dom/client": "https://esm.sh/react-dom@19.2.0/client",
+          "@google/genai": "https://esm.sh/@google/genai@1.35.0"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="sparkle-container" id="sparkles"></div>
+
+    <div id="root" class="relative z-10"></div>
+
+    <script>
+      const container = document.getElementById("sparkles");
+      const sparkleCount = 100;
+      for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.className = "sparkle";
+        const size = Math.random() * 3 + 1;
+        sparkle.style.width = size + "px";
+        sparkle.style.height = size + "px";
+        sparkle.style.left = Math.random() * 100 + "%";
+        sparkle.style.top = Math.random() * 100 + "%";
+        sparkle.style.setProperty("--duration", Math.random() * 3 + 2 + "s");
+        sparkle.style.animationDelay = Math.random() * 5 + "s";
+        container.appendChild(sparkle);
+      }
+    </script>
+
+    <!-- ESTO ES LO IMPORTANTE: CARGA TU APP -->
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
