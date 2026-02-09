@@ -72,18 +72,97 @@ function renderCoach() {
         </button>
       </div>
 
-      <div class="bg-white/10 backdrop-blur-lg p-6 rounded-3xl shadow-xl border border-white/20 flex-1">
-        <p class="text-lg font-semibold mb-3">👋 Hola!</p>
-        <p class="opacity-90 leading-relaxed">
-          Soy tu coach de inglés. Muy pronto vas a poder escribir acá y practicar conversaciones reales.
-        </p>
-
-        <div class="mt-6 bg-black/20 p-4 rounded-2xl text-sm opacity-90">
-          ✨ Próximo paso: conectar Gemini API para respuestas inteligentes.
+      <div id="chatBox"
+        class="bg-white/10 backdrop-blur-lg p-6 rounded-3xl shadow-xl border border-white/20 flex-1 overflow-y-auto space-y-4">
+        
+        <div class="bg-black/20 p-4 rounded-2xl">
+          <p class="font-bold">Coach:</p>
+          <p class="opacity-90">Hi! 👋 Welcome to FluentLatino. What’s your name?</p>
         </div>
+
       </div>
+
+      <div class="mt-6 flex gap-2">
+        <input id="userInput"
+          type="text"
+          placeholder="Escribí tu respuesta..."
+          class="flex-1 px-4 py-3 rounded-2xl text-black outline-none"
+        />
+
+        <button id="sendBtn"
+          class="bg-purple-500 hover:bg-purple-600 transition px-5 py-3 rounded-2xl font-semibold shadow-lg">
+          Enviar
+        </button>
+      </div>
+
+      <p class="text-xs opacity-70 mt-4">
+        Próximo paso: conectar Gemini API para respuestas inteligentes.
+      </p>
     </div>
   `;
+
+  document.getElementById("btnBack").addEventListener("click", renderHome);
+
+  const chatBox = document.getElementById("chatBox");
+  const input = document.getElementById("userInput");
+  const sendBtn = document.getElementById("sendBtn");
+
+  function addMessage(sender, text, isUser = false) {
+    const bubble = document.createElement("div");
+    bubble.className = isUser
+      ? "bg-purple-500/40 p-4 rounded-2xl self-end"
+      : "bg-black/20 p-4 rounded-2xl";
+
+    bubble.innerHTML = `
+      <p class="font-bold">${sender}:</p>
+      <p class="opacity-90">${text}</p>
+    `;
+
+    chatBox.appendChild(bubble);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function coachReply(userText) {
+    const msg = userText.toLowerCase();
+
+    if (msg.includes("hola") || msg.includes("hello")) {
+      return "Hello! 😄 Nice to meet you. What is your name?";
+    }
+
+    if (msg.includes("my name is")) {
+      return "Great! 🌟 Where are you from?";
+    }
+
+    if (msg.includes("argentina")) {
+      return "Awesome 🇦🇷! Let's practice: How old are you?";
+    }
+
+    if (msg.includes("i am")) {
+      return "Perfect! 🎉 Now tell me: What do you do? (teacher, student, etc.)";
+    }
+
+    return "Good! 😄 Now repeat after me: I want to learn English!";
+  }
+
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage("You", text, true);
+    input.value = "";
+
+    setTimeout(() => {
+      addMessage("Coach", coachReply(text));
+    }, 600);
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+}
+
 
   document.getElementById("btnBack").addEventListener("click", renderHome);
 }
