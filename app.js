@@ -128,6 +128,97 @@ const micBtn = document.getElementById("micBtn");
     chatBox.appendChild(bubble);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
+let coachStep = 0;
+let userName = "";
+
+function coachReply(userText) {
+  const msg = userText.trim();
+
+  // STEP 0: pedir nombre
+  if (coachStep === 0) {
+    userName = msg;
+    coachStep = 1;
+    return `Nice to meet you, ${userName}! 😄\nNow tell me: Where are you from? (Example: I'm from Argentina)`;
+  }
+
+  // STEP 1: país
+  if (coachStep === 1) {
+    coachStep = 2;
+    return `Great! 🌎\nNow tell me: How old are you? (Example: I'm 25 years old)`;
+  }
+
+  // STEP 2: edad
+  if (coachStep === 2) {
+    coachStep = 3;
+    return `Awesome! 🎉\nNow tell me: What do you do? (Example: I'm a teacher / I'm a student)`;
+  }
+
+  // STEP 3: ocupación
+  if (coachStep === 3) {
+    coachStep = 4;
+    return `Perfect, ${userName}! 👏\nNow let's practice a super important sentence:\n\n👉 Repeat after me:\n"I want to learn English."`;
+  }
+
+  // STEP 4: repetir frase
+  if (coachStep === 4) {
+    const lower = msg.toLowerCase();
+
+    if (lower.includes("i want to learn english")) {
+      coachStep = 5;
+      return `YESSS! 🔥 Very good pronunciation!\nNow let's continue:\n\nQuestion:\n👉 Why do you want to learn English?\n(Example: I want to travel / I want a better job)`;
+    } else {
+      return `Almost! 😄\nTry again:\n👉 "I want to learn English."`;
+    }
+  }
+
+  // STEP 5: motivo
+  if (coachStep === 5) {
+    coachStep = 6;
+    return `Nice answer! 💡\nNow let's practice daily conversation:\n\nSituation: At a café ☕\nCoach: Hello! What would you like?\n\nYour turn! Write your answer in English.`;
+  }
+
+  // STEP 6: café roleplay
+  if (coachStep === 6) {
+    coachStep = 7;
+    return `Great! 😍\nCoach: Sure! Anything else?\n\nYour turn again.`;
+  }
+
+  // STEP 7: cerrar roleplay
+  if (coachStep === 7) {
+    coachStep = 8;
+    return `Excellent, ${userName}! 🎉\nYou completed your first role play.\n\nNow tell me:\n👉 Do you want to practice: Food, Travel, or Work?`;
+  }
+
+  // STEP 8: elegir tema
+  if (coachStep === 8) {
+    const lower = msg.toLowerCase();
+
+    if (lower.includes("food")) {
+      coachStep = 9;
+      return `Yummy! 🍔\nVocabulary practice:\nRepeat:\n\n"delicious"\n"hungry"\n"menu"\n\nNow make a sentence with "hungry".`;
+    }
+
+    if (lower.includes("travel")) {
+      coachStep = 9;
+      return `Great! ✈️\nVocabulary practice:\nRepeat:\n\n"passport"\n"ticket"\n"hotel"\n\nNow make a sentence with "ticket".`;
+    }
+
+    if (lower.includes("work")) {
+      coachStep = 9;
+      return `Nice! 💼\nVocabulary practice:\nRepeat:\n\n"meeting"\n"deadline"\n"schedule"\n\nNow make a sentence with "meeting".`;
+    }
+
+    return `Choose one please 😄\n👉 Food / Travel / Work`;
+  }
+
+  // STEP 9: conversación libre simple
+  if (coachStep === 9) {
+    return `Very good! 👏\nLet's continue practicing.\n\nTell me:\n👉 What is your favorite thing about learning English?`;
+  }
+
+  // fallback general
+  return `Nice! 😄 Keep going.\nTell me more!`;
+}
 
   function coachReply(userText) {
     const msg = userText.toLowerCase();
