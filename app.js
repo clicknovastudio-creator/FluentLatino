@@ -207,56 +207,55 @@ micBtn.addEventListener("click", () => {
 function renderVocabulary() {
   const topics = {
     "Food & Drinks": [
-      { word: "water", meaning: "agua" },
       { word: "coffee", meaning: "café" },
-      { word: "tea", meaning: "té" },
+      { word: "water", meaning: "agua" },
       { word: "bread", meaning: "pan" },
-      { word: "milk", meaning: "leche" },
       { word: "juice", meaning: "jugo" },
-      { word: "breakfast", meaning: "desayuno" },
-      { word: "dinner", meaning: "cena" },
-      { word: "hungry", meaning: "hambriento" },
-      { word: "delicious", meaning: "delicioso" },
-      { word: "salt", meaning: "sal" },
-      { word: "sugar", meaning: "azúcar" }
+      { word: "tea", meaning: "té" }
     ],
-
     "Travel": [
       { word: "airport", meaning: "aeropuerto" },
-      { word: "passport", meaning: "pasaporte" },
       { word: "ticket", meaning: "boleto" },
+      { word: "passport", meaning: "pasaporte" },
       { word: "hotel", meaning: "hotel" },
-      { word: "reservation", meaning: "reserva" },
-      { word: "map", meaning: "mapa" },
-      { word: "train", meaning: "tren" },
-      { word: "bus", meaning: "colectivo" },
-      { word: "taxi", meaning: "taxi" },
-      { word: "luggage", meaning: "equipaje" },
-      { word: "trip", meaning: "viaje" },
-      { word: "vacation", meaning: "vacaciones" }
+      { word: "reservation", meaning: "reserva" }
     ],
-
-    "Work & Office": [
+    "Work": [
       { word: "meeting", meaning: "reunión" },
       { word: "boss", meaning: "jefe" },
-      { word: "colleague", meaning: "compañero de trabajo" },
       { word: "schedule", meaning: "horario" },
       { word: "deadline", meaning: "fecha límite" },
-      { word: "salary", meaning: "salario" },
-      { word: "interview", meaning: "entrevista" },
-      { word: "resume", meaning: "currículum" },
-      { word: "email", meaning: "correo" },
-      { word: "presentation", meaning: "presentación" },
-      { word: "project", meaning: "proyecto" },
-      { word: "promotion", meaning: "ascenso" }
+      { word: "salary", meaning: "salario" }
+    ],
+    "Daily Life": [
+      { word: "morning", meaning: "mañana" },
+      { word: "afternoon", meaning: "tarde" },
+      { word: "evening", meaning: "noche" },
+      { word: "shopping", meaning: "compras" },
+      { word: "home", meaning: "hogar" }
     ]
   };
 
-  let selectedTopic = Object.keys(topics)[0];
-  let visibleCount = 6;
+  let savedTopics = JSON.parse(localStorage.getItem("fluentTopics"));
 
-  function renderList() {
-    const words = topics[selectedTopic].slice(0, visibleCount);
+  if (!savedTopics) {
+    savedTopics = ["Food & Drinks"]; // default
+    localStorage.setItem("fluentTopics", JSON.stringify(savedTopics));
+  }
+
+  let visibleCount = 10;
+
+  function getSelectedWords() {
+    let words = [];
+    savedTopics.forEach((topic) => {
+      words = words.concat(topics[topic] || []);
+    });
+    return words;
+  }
+
+  function renderVocabularyUI() {
+    const allWords = getSelectedWords();
+    const visibleWords = allWords.slice(0, visibleCount);
 
     root.innerHTML = `
       <div class="min-h-screen flex flex-col px-6 py-8 text-white">
@@ -269,58 +268,55 @@ function renderVocabulary() {
           </button>
         </div>
 
-        <div class="bg-white/10 backdrop-blur-lg p-6 rounded-3xl shadow-xl border border-white/20 flex-1">
+        <div class="bg-white/10 backdrop-blur-lg p-6 rounded-3xl shadow-xl border border-white/20">
 
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <h2 class="text-xl font-bold mb-4">Choose your topics:</h2>
 
-            <div>
-              <p class="text-sm opacity-80 mb-2">Seleccioná un Topic:</p>
-              <select id="topicSelect"
-                class="px-4 py-3 rounded-xl text-black font-semibold w-full md:w-auto">
-                ${Object.keys(topics)
-                  .map(
-                    (topic) =>
-                      `<option value="${topic}" ${
-                        topic === selectedTopic ? "selected" : ""
-                      }>${topic}</option>`
-                  )
-                  .join("")}
-              </select>
-            </div>
-
-            <div class="flex gap-3">
-              <button id="btnCopy"
-                class="bg-purple-500 hover:bg-purple-600 transition px-4 py-3 rounded-xl font-semibold shadow-lg">
-                📋 Copy List
-              </button>
-
-              <button id="btnPDF"
-                class="bg-white/15 hover:bg-white/25 transition px-4 py-3 rounded-xl font-semibold">
-                🧾 Export PDF
-              </button>
-            </div>
-
-          </div>
-
-          <p class="text-sm opacity-80 mb-4">
-            Mostrando <span class="font-bold">${words.length}</span> palabras de <span class="font-bold">${topics[selectedTopic].length}</span>
-          </p>
-
-          <div id="vocabList" class="grid gap-4">
-            ${words
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            ${Object.keys(topics)
               .map(
-                (w) => `
-                  <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
-                    <p class="text-xl font-bold">${w.word}</p>
-                    <p class="opacity-80">${w.meaning}</p>
-                  </div>
-                `
+                (topic) => `
+                <label class="flex items-center gap-2 bg-black/20 p-3 rounded-xl cursor-pointer">
+                  <input type="checkbox" class="topicCheck"
+                    value="${topic}" ${savedTopics.includes(topic) ? "checked" : ""}>
+                  <span>${topic}</span>
+                </label>
+              `
               )
               .join("")}
           </div>
 
+          <div class="flex gap-3 mb-6">
+            <button id="copyBtn"
+              class="flex-1 bg-purple-500 hover:bg-purple-600 transition text-white font-semibold py-3 rounded-2xl shadow-lg">
+              📋 Copy List
+            </button>
+
+            <button id="pdfBtn"
+              class="flex-1 bg-white/15 hover:bg-white/25 transition text-white font-semibold py-3 rounded-2xl">
+              📄 Export PDF
+            </button>
+          </div>
+
+          <div id="vocabList" class="grid gap-4">
+            ${
+              visibleWords.length === 0
+                ? `<p class="opacity-70">No vocabulary available. Select at least one topic.</p>`
+                : visibleWords
+                    .map(
+                      (w) => `
+                      <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
+                        <p class="text-xl font-bold">${w.word}</p>
+                        <p class="opacity-80">${w.meaning}</p>
+                      </div>
+                    `
+                    )
+                    .join("")
+            }
+          </div>
+
           <p class="text-xs opacity-70 mt-6">
-            📌 Tip: bajá hacia abajo para cargar más palabras automáticamente.
+            Scroll down to load more vocabulary.
           </p>
 
         </div>
@@ -329,21 +325,29 @@ function renderVocabulary() {
 
     document.getElementById("btnBack").addEventListener("click", renderHome);
 
-    document.getElementById("topicSelect").addEventListener("change", (e) => {
-      selectedTopic = e.target.value;
-      visibleCount = 6;
-      renderList();
+    // guardar topics elegidos
+    document.querySelectorAll(".topicCheck").forEach((check) => {
+      check.addEventListener("change", () => {
+        savedTopics = Array.from(document.querySelectorAll(".topicCheck:checked")).map(
+          (c) => c.value
+        );
+        localStorage.setItem("fluentTopics", JSON.stringify(savedTopics));
+        visibleCount = 10;
+        renderVocabularyUI();
+      });
     });
 
-    document.getElementById("btnCopy").addEventListener("click", () => {
-      const text = words.map((w) => `${w.word} - ${w.meaning}`).join("\n");
+    // copiar lista
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      const text = visibleWords.map((w) => `${w.word} - ${w.meaning}`).join("\n");
       navigator.clipboard.writeText(text);
-      alert("✅ Vocabulary copied!");
+      alert("Vocabulary copied!");
     });
 
-    document.getElementById("btnPDF").addEventListener("click", () => {
+    // exportar PDF
+    document.getElementById("pdfBtn").addEventListener("click", () => {
       if (!window.jspdf) {
-        alert("jsPDF no está cargado.");
+        alert("jsPDF not loaded. Add jsPDF script to index.html");
         return;
       }
 
@@ -351,13 +355,15 @@ function renderVocabulary() {
       const doc = new jsPDF();
 
       doc.setFontSize(16);
-      doc.text(`Vocabulary List - ${selectedTopic}`, 10, 15);
+      doc.text("FluentLatino Vocabulary List", 10, 15);
 
       doc.setFontSize(12);
+      doc.text("Topics: " + savedTopics.join(", "), 10, 25);
 
-      let y = 30;
-      words.forEach((w, index) => {
-        doc.text(`${index + 1}. ${w.word} - ${w.meaning}`, 10, y);
+      let y = 40;
+
+      visibleWords.forEach((w, i) => {
+        doc.text(`${i + 1}. ${w.word} - ${w.meaning}`, 10, y);
         y += 8;
 
         if (y > 280) {
@@ -366,24 +372,23 @@ function renderVocabulary() {
         }
       });
 
-      doc.save(`Vocabulary-${selectedTopic}.pdf`);
+      doc.save("FluentLatino-Vocabulary.pdf");
     });
 
-    // Infinite scroll
+    // infinite scroll
     window.onscroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200
-      ) {
-        if (visibleCount < topics[selectedTopic].length) {
-          visibleCount += 4;
-          renderList();
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+        if (visibleCount < allWords.length) {
+          visibleCount += 5;
+          renderVocabularyUI();
         }
       }
     };
   }
 
-  renderList();
+  renderVocabularyUI();
 }
+
 
 
 function renderConversation() {
