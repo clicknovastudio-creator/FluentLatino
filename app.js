@@ -1,5 +1,6 @@
 const root = document.getElementById("root");
 
+// ===================== HOME =====================
 function renderHome() {
   root.innerHTML = `
     <div class="min-h-screen flex flex-col items-center justify-center px-6 text-center text-white">
@@ -60,6 +61,7 @@ function renderHome() {
   document.getElementById("btnProgress").addEventListener("click", renderProgress);
 }
 
+// ===================== COACH =====================
 function renderCoach() {
   root.innerHTML = `
     <div class="min-h-screen flex flex-col px-6 py-8 text-white">
@@ -82,24 +84,23 @@ function renderCoach() {
 
       </div>
 
-     <div class="mt-6 flex gap-2">
-  <button id="micBtn"
-    class="bg-white/20 hover:bg-white/30 transition px-4 py-3 rounded-2xl font-semibold shadow-lg">
-    🎤
-  </button>
+      <div class="mt-6 flex gap-2">
+        <button id="micBtn"
+          class="bg-white/20 hover:bg-white/30 transition px-4 py-3 rounded-2xl font-semibold shadow-lg">
+          🎤
+        </button>
 
-  <input id="userInput"
-    type="text"
-    placeholder="Escribí o hablá..."
-    class="flex-1 px-4 py-3 rounded-2xl text-black outline-none"
-  />
+        <input id="userInput"
+          type="text"
+          placeholder="Escribí o hablá..."
+          class="flex-1 px-4 py-3 rounded-2xl text-black outline-none"
+        />
 
-  <button id="sendBtn"
-    class="bg-purple-500 hover:bg-purple-600 transition px-5 py-3 rounded-2xl font-semibold shadow-lg">
-    Enviar
-  </button>
-</div>
-
+        <button id="sendBtn"
+          class="bg-purple-500 hover:bg-purple-600 transition px-5 py-3 rounded-2xl font-semibold shadow-lg">
+          Enviar
+        </button>
+      </div>
 
       <p class="text-xs opacity-70 mt-4">
         Próximo paso: conectar Gemini API para respuestas inteligentes.
@@ -112,7 +113,7 @@ function renderCoach() {
   const chatBox = document.getElementById("chatBox");
   const input = document.getElementById("userInput");
   const sendBtn = document.getElementById("sendBtn");
-const micBtn = document.getElementById("micBtn");
+  const micBtn = document.getElementById("micBtn");
 
   function addMessage(sender, text, isUser = false) {
     const bubble = document.createElement("div");
@@ -122,128 +123,105 @@ const micBtn = document.getElementById("micBtn");
 
     bubble.innerHTML = `
       <p class="font-bold">${sender}:</p>
-      <p class="opacity-90">${text}</p>
+      <p class="opacity-90 whitespace-pre-line">${text}</p>
     `;
 
     chatBox.appendChild(bubble);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
-let coachStep = 0;
-let userName = "";
 
-function coachReply(userText) {
-  const msg = userText.trim();
-
-  // STEP 0: pedir nombre
-  if (coachStep === 0) {
-    userName = msg;
-    coachStep = 1;
-    return `Nice to meet you, ${userName}! 😄\nNow tell me: Where are you from? (Example: I'm from Argentina)`;
-  }
-
-  // STEP 1: país
-  if (coachStep === 1) {
-    coachStep = 2;
-    return `Great! 🌎\nNow tell me: How old are you? (Example: I'm 25 years old)`;
-  }
-
-  // STEP 2: edad
-  if (coachStep === 2) {
-    coachStep = 3;
-    return `Awesome! 🎉\nNow tell me: What do you do? (Example: I'm a teacher / I'm a student)`;
-  }
-
-  // STEP 3: ocupación
-  if (coachStep === 3) {
-    coachStep = 4;
-    return `Perfect, ${userName}! 👏\nNow let's practice a super important sentence:\n\n👉 Repeat after me:\n"I want to learn English."`;
-  }
-
-  // STEP 4: repetir frase
-  if (coachStep === 4) {
-    const lower = msg.toLowerCase();
-
-    if (lower.includes("i want to learn english")) {
-      coachStep = 5;
-      return `YESSS! 🔥 Very good pronunciation!\nNow let's continue:\n\nQuestion:\n👉 Why do you want to learn English?\n(Example: I want to travel / I want a better job)`;
-    } else {
-      return `Almost! 😄\nTry again:\n👉 "I want to learn English."`;
-    }
-  }
-
-  // STEP 5: motivo
-  if (coachStep === 5) {
-    coachStep = 6;
-    return `Nice answer! 💡\nNow let's practice daily conversation:\n\nSituation: At a café ☕\nCoach: Hello! What would you like?\n\nYour turn! Write your answer in English.`;
-  }
-
-  // STEP 6: café roleplay
-  if (coachStep === 6) {
-    coachStep = 7;
-    return `Great! 😍\nCoach: Sure! Anything else?\n\nYour turn again.`;
-  }
-
-  // STEP 7: cerrar roleplay
-  if (coachStep === 7) {
-    coachStep = 8;
-    return `Excellent, ${userName}! 🎉\nYou completed your first role play.\n\nNow tell me:\n👉 Do you want to practice: Food, Travel, or Work?`;
-  }
-
-  // STEP 8: elegir tema
-  if (coachStep === 8) {
-    const lower = msg.toLowerCase();
-
-    if (lower.includes("food")) {
-      coachStep = 9;
-      return `Yummy! 🍔\nVocabulary practice:\nRepeat:\n\n"delicious"\n"hungry"\n"menu"\n\nNow make a sentence with "hungry".`;
-    }
-
-    if (lower.includes("travel")) {
-      coachStep = 9;
-      return `Great! ✈️\nVocabulary practice:\nRepeat:\n\n"passport"\n"ticket"\n"hotel"\n\nNow make a sentence with "ticket".`;
-    }
-
-    if (lower.includes("work")) {
-      coachStep = 9;
-      return `Nice! 💼\nVocabulary practice:\nRepeat:\n\n"meeting"\n"deadline"\n"schedule"\n\nNow make a sentence with "meeting".`;
-    }
-
-    return `Choose one please 😄\n👉 Food / Travel / Work`;
-  }
-
-  // STEP 9: conversación libre simple
-  if (coachStep === 9) {
-    return `Very good! 👏\nLet's continue practicing.\n\nTell me:\n👉 What is your favorite thing about learning English?`;
-  }
-
-  // fallback general
-  return `Nice! 😄 Keep going.\nTell me more!`;
-}
+  // ========= COACH STEPS =========
+  let coachStep = 0;
+  let userName = "";
 
   function coachReply(userText) {
-    const msg = userText.toLowerCase();
+    const msg = userText.trim();
+    const lower = msg.toLowerCase();
 
-    if (msg.includes("hola") || msg.includes("hello")) {
-      return "Hello! 😄 Nice to meet you. What is your name?";
+    // STEP 0: pedir nombre
+    if (coachStep === 0) {
+      userName = msg;
+      coachStep = 1;
+      return `Nice to meet you, ${userName}! 😄\nNow tell me: Where are you from? (Example: I'm from Argentina)`;
     }
 
-    if (msg.includes("my name is")) {
-      return "Great! 🌟 Where are you from?";
+    // STEP 1: país
+    if (coachStep === 1) {
+      coachStep = 2;
+      return `Great! 🌎\nNow tell me: How old are you? (Example: I'm 25 years old)`;
     }
 
-    if (msg.includes("argentina")) {
-      return "Awesome 🇦🇷! Let's practice: How old are you?";
+    // STEP 2: edad
+    if (coachStep === 2) {
+      coachStep = 3;
+      return `Awesome! 🎉\nNow tell me: What do you do? (Example: I'm a teacher / I'm a student)`;
     }
 
-    if (msg.includes("i am")) {
-      return "Perfect! 🎉 Now tell me: What do you do? (teacher, student, etc.)";
+    // STEP 3: ocupación
+    if (coachStep === 3) {
+      coachStep = 4;
+      return `Perfect, ${userName}! 👏\nNow let's practice a super important sentence:\n\n👉 Repeat after me:\n"I want to learn English."`;
     }
 
-    return "Good! 😄 Now repeat after me: I want to learn English!";
+    // STEP 4: repetir frase
+    if (coachStep === 4) {
+      if (lower.includes("i want to learn english")) {
+        coachStep = 5;
+        return `YESSS! 🔥 Very good pronunciation!\nNow let's continue:\n\n👉 Why do you want to learn English?\n(Example: I want to travel / I want a better job)`;
+      } else {
+        return `Almost! 😄\nTry again:\n👉 "I want to learn English."`;
+      }
+    }
+
+    // STEP 5: motivo
+    if (coachStep === 5) {
+      coachStep = 6;
+      return `Nice answer! 💡\nNow let's practice daily conversation:\n\nSituation: At a café ☕\nCoach: Hello! What would you like?\n\nYour turn! Write your answer in English.`;
+    }
+
+    // STEP 6: café roleplay
+    if (coachStep === 6) {
+      coachStep = 7;
+      return `Great! 😍\nCoach: Sure! Anything else?\n\nYour turn again.`;
+    }
+
+    // STEP 7: cerrar roleplay
+    if (coachStep === 7) {
+      coachStep = 8;
+      return `Excellent, ${userName}! 🎉\nYou completed your first role play.\n\nNow tell me:\n👉 Do you want to practice: Food, Travel, or Work?`;
+    }
+
+    // STEP 8: elegir tema
+    if (coachStep === 8) {
+      if (lower.includes("food")) {
+        coachStep = 9;
+        return `Yummy! 🍔\nVocabulary practice:\nRepeat:\n\n"delicious"\n"hungry"\n"menu"\n\nNow make a sentence with "hungry".`;
+      }
+
+      if (lower.includes("travel")) {
+        coachStep = 9;
+        return `Great! ✈️\nVocabulary practice:\nRepeat:\n\n"passport"\n"ticket"\n"hotel"\n\nNow make a sentence with "ticket".`;
+      }
+
+      if (lower.includes("work")) {
+        coachStep = 9;
+        return `Nice! 💼\nVocabulary practice:\nRepeat:\n\n"meeting"\n"deadline"\n"schedule"\n\nNow make a sentence with "meeting".`;
+      }
+
+      return `Choose one please 😄\n👉 Food / Travel / Work`;
+    }
+
+    // STEP 9: conversación libre simple
+    if (coachStep === 9) {
+      return `Very good! 👏\nLet's continue practicing.\n\nTell me:\n👉 What is your favorite thing about learning English?`;
+    }
+
+    return `Nice! 😄 Keep going.\nTell me more!`;
   }
 
-  function sendMessage() {
-    const text = input.value.trim();
+  // ========= SEND MESSAGE =========
+  function sendMessage(textFromMic = null) {
+    const text = textFromMic || input.value.trim();
     if (!text) return;
 
     addMessage("You", text, true);
@@ -254,47 +232,48 @@ function coachReply(userText) {
     }, 600);
   }
 
-  sendBtn.addEventListener("click", sendMessage);
+  sendBtn.addEventListener("click", () => sendMessage());
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") sendMessage();
   });
-  // 🎤 Micrófono (Speech Recognition)
-micBtn.addEventListener("click", () => {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  if (!SpeechRecognition) {
-    alert("Tu navegador no soporta micrófono. Usá Chrome en Android.");
-    return;
+  // ========= MIC =========
+  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    micBtn.addEventListener("click", () => {
+      recognition.start();
+      micBtn.textContent = "🎙️...";
+    });
+
+    recognition.onresult = (event) => {
+      const voiceText = event.results[0][0].transcript;
+      micBtn.textContent = "🎤";
+      sendMessage(voiceText);
+    };
+
+    recognition.onerror = () => {
+      micBtn.textContent = "🎤";
+      alert("No se pudo usar el micrófono. Revisá permisos del navegador.");
+    };
+
+    recognition.onend = () => {
+      micBtn.textContent = "🎤";
+    };
+  } else {
+    micBtn.addEventListener("click", () => {
+      alert("Tu navegador no soporta micrófono. Usá Chrome.");
+    });
   }
-
-  const recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
-
-  micBtn.textContent = "🎙️";
-
-  recognition.start();
-
-  recognition.onresult = (event) => {
-    const voiceText = event.results[0][0].transcript;
-    input.value = voiceText;
-    micBtn.textContent = "🎤";
-    sendMessage();
-  };
-
-  recognition.onerror = () => {
-    micBtn.textContent = "🎤";
-    alert("No se pudo usar el micrófono. Revisá permisos del navegador.");
-  };
-
-  recognition.onend = () => {
-    micBtn.textContent = "🎤";
-  };
-});
-
 }
 
+// ===================== VOCABULARY TRAINER =====================
 function renderVocabulary() {
   const topics = {
     "Food & Drinks": [
@@ -330,7 +309,7 @@ function renderVocabulary() {
   let savedTopics = JSON.parse(localStorage.getItem("fluentTopics"));
 
   if (!savedTopics) {
-    savedTopics = ["Food & Drinks"]; // default
+    savedTopics = ["Food & Drinks"];
     localStorage.setItem("fluentTopics", JSON.stringify(savedTopics));
   }
 
@@ -480,8 +459,7 @@ function renderVocabulary() {
   renderVocabularyUI();
 }
 
-
-
+// ===================== CONVERSATION PRACTICE =====================
 function renderConversation() {
   root.innerHTML = `
     <div class="min-h-screen flex flex-col px-6 py-8 text-white">
@@ -526,6 +504,7 @@ function renderConversation() {
   document.getElementById("btnBack").addEventListener("click", renderHome);
 }
 
+// ===================== PROGRESS =====================
 function renderProgress() {
   root.innerHTML = `
     <div class="min-h-screen flex flex-col px-6 py-8 text-white">
@@ -561,5 +540,5 @@ function renderProgress() {
   document.getElementById("btnBack").addEventListener("click", renderHome);
 }
 
-// Inicial
+// ===================== INIT =====================
 renderHome();
