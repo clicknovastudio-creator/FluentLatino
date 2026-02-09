@@ -82,18 +82,24 @@ function renderCoach() {
 
       </div>
 
-      <div class="mt-6 flex gap-2">
-        <input id="userInput"
-          type="text"
-          placeholder="Escribí tu respuesta..."
-          class="flex-1 px-4 py-3 rounded-2xl text-black outline-none"
-        />
+     <div class="mt-6 flex gap-2">
+  <button id="micBtn"
+    class="bg-white/20 hover:bg-white/30 transition px-4 py-3 rounded-2xl font-semibold shadow-lg">
+    🎤
+  </button>
 
-        <button id="sendBtn"
-          class="bg-purple-500 hover:bg-purple-600 transition px-5 py-3 rounded-2xl font-semibold shadow-lg">
-          Enviar
-        </button>
-      </div>
+  <input id="userInput"
+    type="text"
+    placeholder="Escribí o hablá..."
+    class="flex-1 px-4 py-3 rounded-2xl text-black outline-none"
+  />
+
+  <button id="sendBtn"
+    class="bg-purple-500 hover:bg-purple-600 transition px-5 py-3 rounded-2xl font-semibold shadow-lg">
+    Enviar
+  </button>
+</div>
+
 
       <p class="text-xs opacity-70 mt-4">
         Próximo paso: conectar Gemini API para respuestas inteligentes.
@@ -106,6 +112,7 @@ function renderCoach() {
   const chatBox = document.getElementById("chatBox");
   const input = document.getElementById("userInput");
   const sendBtn = document.getElementById("sendBtn");
+const micBtn = document.getElementById("micBtn");
 
   function addMessage(sender, text, isUser = false) {
     const bubble = document.createElement("div");
@@ -161,6 +168,40 @@ function renderCoach() {
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") sendMessage();
   });
+  // 🎤 Micrófono (Speech Recognition)
+micBtn.addEventListener("click", () => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Tu navegador no soporta micrófono. Usá Chrome en Android.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+
+  micBtn.textContent = "🎙️";
+
+  recognition.start();
+
+  recognition.onresult = (event) => {
+    const voiceText = event.results[0][0].transcript;
+    input.value = voiceText;
+    micBtn.textContent = "🎤";
+    sendMessage();
+  };
+
+  recognition.onerror = () => {
+    micBtn.textContent = "🎤";
+    alert("No se pudo usar el micrófono. Revisá permisos del navegador.");
+  };
+
+  recognition.onend = () => {
+    micBtn.textContent = "🎤";
+  };
+});
+
 }
 
 function renderVocabulary() {
