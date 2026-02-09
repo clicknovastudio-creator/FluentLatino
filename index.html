@@ -6,29 +6,33 @@
 
   <title>FluentLatino</title>
 
-  <link rel="<link rel="icon" href="...">
-<link rel="stylesheet" href="...">
-<script src="..."></script>
-  
+  <link rel="manifest" href="manifest.json" />
+
+  <meta name="theme-color" content="#1e88e5" />
 
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
       font-family: Arial, sans-serif;
       background: #ffffff;
     }
+
     iframe {
+      width: 100%;
+      height: 100%;
       border: none;
-      width: 100vw;
-      height: 100vh;
     }
   </style>
 </head>
 
 <body>
   <iframe 
-    src="https://ai.studio/apps/drive/1UZ_G84r1wsrhuW7yI9wap6Wdofd9YuQD?fullscreenApplet=true">
-  </iframe>
+    src="https://ai.studio/apps/drive/1UZ_G84r1wsrhuW7yI9wap6Wdofd9YuQD?fullscreenApplet=true"
+    allow="microphone; camera"
+  ></iframe>
 
   <script>
     if ("serviceWorker" in navigator) {
