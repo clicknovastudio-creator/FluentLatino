@@ -85,6 +85,7 @@ function renderCoach() {
       </div>
 
       <div class="mt-6 flex gap-2">
+
         <button id="micBtn"
           class="bg-white/20 hover:bg-white/30 transition px-4 py-3 rounded-2xl font-semibold shadow-lg">
           🎤
@@ -100,10 +101,11 @@ function renderCoach() {
           class="bg-purple-500 hover:bg-purple-600 transition px-5 py-3 rounded-2xl font-semibold shadow-lg">
           Enviar
         </button>
+
       </div>
 
-      <p class="text-xs opacity-70 mt-4">
-        Próximo paso: conectar Gemini API para respuestas inteligentes.
+      <p id="statusText" class="text-xs opacity-70 mt-4">
+        Modo micrófono: OFF
       </p>
     </div>
   `;
@@ -114,6 +116,7 @@ function renderCoach() {
   const input = document.getElementById("userInput");
   const sendBtn = document.getElementById("sendBtn");
   const micBtn = document.getElementById("micBtn");
+  const statusText = document.getElementById("statusText");
 
   function addMessage(sender, text, isUser = false) {
     const bubble = document.createElement("div");
@@ -130,7 +133,10 @@ function renderCoach() {
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // ========= COACH STEPS =========
+  // ============================
+  //   COACH LOGIC (STEPS)
+  // ============================
+
   let coachStep = 0;
   let userName = "";
 
@@ -138,88 +144,97 @@ function renderCoach() {
     const msg = userText.trim();
     const lower = msg.toLowerCase();
 
-    // STEP 0: pedir nombre
     if (coachStep === 0) {
       userName = msg;
       coachStep = 1;
-      return `Nice to meet you, ${userName}! 😄\nNow tell me: Where are you from? (Example: I'm from Argentina)`;
+      return `Nice to meet you, ${userName}! 😄\nWhere are you from? (Example: I'm from Argentina)`;
     }
 
-    // STEP 1: país
     if (coachStep === 1) {
       coachStep = 2;
-      return `Great! 🌎\nNow tell me: How old are you? (Example: I'm 25 years old)`;
+      return `Great! 🌎\nHow old are you? (Example: I'm 25 years old)`;
     }
 
-    // STEP 2: edad
     if (coachStep === 2) {
       coachStep = 3;
-      return `Awesome! 🎉\nNow tell me: What do you do? (Example: I'm a teacher / I'm a student)`;
+      return `Awesome! 🎉\nWhat do you do? (Example: I'm a teacher / I'm a student)`;
     }
 
-    // STEP 3: ocupación
     if (coachStep === 3) {
       coachStep = 4;
-      return `Perfect, ${userName}! 👏\nNow let's practice a super important sentence:\n\n👉 Repeat after me:\n"I want to learn English."`;
+      return `Perfect, ${userName}! 👏\nNow repeat after me:\n\n👉 I want to learn English.`;
     }
 
-    // STEP 4: repetir frase
     if (coachStep === 4) {
       if (lower.includes("i want to learn english")) {
         coachStep = 5;
-        return `YESSS! 🔥 Very good pronunciation!\nNow let's continue:\n\n👉 Why do you want to learn English?\n(Example: I want to travel / I want a better job)`;
+        return `YESSS! 🔥 Great job!\nNow tell me:\n👉 Why do you want to learn English?\n(Example: I want to travel / I want a better job)`;
       } else {
-        return `Almost! 😄\nTry again:\n👉 "I want to learn English."`;
+        return `Almost! 😄\nTry again:\n👉 I want to learn English.`;
       }
     }
 
-    // STEP 5: motivo
     if (coachStep === 5) {
       coachStep = 6;
-      return `Nice answer! 💡\nNow let's practice daily conversation:\n\nSituation: At a café ☕\nCoach: Hello! What would you like?\n\nYour turn! Write your answer in English.`;
+      return `Nice answer! 💡\nRoleplay time:\n\nSituation: At a café ☕\nCoach: Hello! What would you like?\n\nYour turn!`;
     }
 
-    // STEP 6: café roleplay
     if (coachStep === 6) {
       coachStep = 7;
       return `Great! 😍\nCoach: Sure! Anything else?\n\nYour turn again.`;
     }
 
-    // STEP 7: cerrar roleplay
     if (coachStep === 7) {
       coachStep = 8;
-      return `Excellent, ${userName}! 🎉\nYou completed your first role play.\n\nNow tell me:\n👉 Do you want to practice: Food, Travel, or Work?`;
+      return `Excellent, ${userName}! 🎉\nYou completed your first role play.\n\nChoose a topic:\n👉 Food / Travel / Work`;
     }
 
-    // STEP 8: elegir tema
     if (coachStep === 8) {
       if (lower.includes("food")) {
         coachStep = 9;
-        return `Yummy! 🍔\nVocabulary practice:\nRepeat:\n\n"delicious"\n"hungry"\n"menu"\n\nNow make a sentence with "hungry".`;
+        return `Yummy! 🍔\nRepeat:\n- delicious\n- hungry\n- menu\n\nNow make a sentence with "hungry".`;
       }
 
       if (lower.includes("travel")) {
         coachStep = 9;
-        return `Great! ✈️\nVocabulary practice:\nRepeat:\n\n"passport"\n"ticket"\n"hotel"\n\nNow make a sentence with "ticket".`;
+        return `Great! ✈️\nRepeat:\n- passport\n- ticket\n- hotel\n\nNow make a sentence with "ticket".`;
       }
 
       if (lower.includes("work")) {
         coachStep = 9;
-        return `Nice! 💼\nVocabulary practice:\nRepeat:\n\n"meeting"\n"deadline"\n"schedule"\n\nNow make a sentence with "meeting".`;
+        return `Nice! 💼\nRepeat:\n- meeting\n- deadline\n- schedule\n\nNow make a sentence with "meeting".`;
       }
 
       return `Choose one please 😄\n👉 Food / Travel / Work`;
     }
 
-    // STEP 9: conversación libre simple
     if (coachStep === 9) {
-      return `Very good! 👏\nLet's continue practicing.\n\nTell me:\n👉 What is your favorite thing about learning English?`;
+      return `Very good! 👏\nNow tell me:\n👉 What is your favorite thing about learning English?`;
     }
 
     return `Nice! 😄 Keep going.\nTell me more!`;
   }
 
-  // ========= SEND MESSAGE =========
+  // ============================
+  //   TEXT TO SPEECH (VOICE)
+  // ============================
+
+  function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // ============================
+  //   SEND MESSAGE
+  // ============================
+
   function sendMessage(textFromMic = null) {
     const text = textFromMic || input.value.trim();
     if (!text) return;
@@ -228,7 +243,9 @@ function renderCoach() {
     input.value = "";
 
     setTimeout(() => {
-      addMessage("Coach", coachReply(text));
+      const reply = coachReply(text);
+      addMessage("Coach", reply);
+      speak(reply);
     }, 600);
   }
 
@@ -238,39 +255,63 @@ function renderCoach() {
     if (e.key === "Enter") sendMessage();
   });
 
-  // ========= MIC =========
-  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+  // ============================
+  //   MICROPHONE (HANDS FREE)
+  // ============================
 
-    const recognition = new SpeechRecognition();
+  let handsFree = false;
+  let recognition = null;
+
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
     recognition.lang = "en-US";
     recognition.interimResults = false;
+    recognition.continuous = true;
 
     micBtn.addEventListener("click", () => {
-      recognition.start();
-      micBtn.textContent = "🎙️...";
+      handsFree = !handsFree;
+
+      if (handsFree) {
+        recognition.start();
+        micBtn.textContent = "🟢";
+        statusText.textContent = "Modo micrófono: ON (Hands Free)";
+      } else {
+        recognition.stop();
+        micBtn.textContent = "🎤";
+        statusText.textContent = "Modo micrófono: OFF";
+      }
     });
 
     recognition.onresult = (event) => {
-      const voiceText = event.results[0][0].transcript;
-      micBtn.textContent = "🎤";
+      const voiceText = event.results[event.results.length - 1][0].transcript;
       sendMessage(voiceText);
     };
 
     recognition.onerror = () => {
       micBtn.textContent = "🎤";
-      alert("No se pudo usar el micrófono. Revisá permisos del navegador.");
+      statusText.textContent = "Error de micrófono. Revisá permisos.";
+      handsFree = false;
     };
 
     recognition.onend = () => {
-      micBtn.textContent = "🎤";
+      if (handsFree) recognition.start();
     };
   } else {
     micBtn.addEventListener("click", () => {
       alert("Tu navegador no soporta micrófono. Usá Chrome.");
     });
   }
+
+  // ============================
+  //   SPEAK FIRST MESSAGE
+  // ============================
+
+  setTimeout(() => {
+    speak("Hi! Welcome to FluentLatino. What's your name?");
+  }, 700);
 }
 
 // ===================== VOCABULARY TRAINER =====================
@@ -281,28 +322,36 @@ function renderVocabulary() {
       { word: "water", meaning: "agua" },
       { word: "bread", meaning: "pan" },
       { word: "juice", meaning: "jugo" },
-      { word: "tea", meaning: "té" }
+      { word: "tea", meaning: "té" },
+      { word: "milk", meaning: "leche" },
+      { word: "menu", meaning: "menú" },
+      { word: "hungry", meaning: "hambriento" },
+      { word: "delicious", meaning: "delicioso" }
     ],
     "Travel": [
       { word: "airport", meaning: "aeropuerto" },
       { word: "ticket", meaning: "boleto" },
       { word: "passport", meaning: "pasaporte" },
       { word: "hotel", meaning: "hotel" },
-      { word: "reservation", meaning: "reserva" }
+      { word: "reservation", meaning: "reserva" },
+      { word: "luggage", meaning: "equipaje" },
+      { word: "boarding pass", meaning: "tarjeta de embarque" }
     ],
     "Work": [
       { word: "meeting", meaning: "reunión" },
       { word: "boss", meaning: "jefe" },
       { word: "schedule", meaning: "horario" },
       { word: "deadline", meaning: "fecha límite" },
-      { word: "salary", meaning: "salario" }
+      { word: "salary", meaning: "salario" },
+      { word: "interview", meaning: "entrevista" }
     ],
     "Daily Life": [
       { word: "morning", meaning: "mañana" },
       { word: "afternoon", meaning: "tarde" },
       { word: "evening", meaning: "noche" },
       { word: "shopping", meaning: "compras" },
-      { word: "home", meaning: "hogar" }
+      { word: "home", meaning: "hogar" },
+      { word: "family", meaning: "familia" }
     ]
   };
 
