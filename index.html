@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FluentLatino - ESL Coach</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Google Font -->
@@ -23,7 +23,6 @@
         overflow-x: hidden;
       }
 
-      /* Sparkling Glitter Effect */
       .sparkle-container {
         position: fixed;
         top: 0;
@@ -53,27 +52,26 @@
           opacity: 0.8;
         }
       }
+    </style>
 
-      @media print {
-        .no-print {
-          display: none;
+    <!-- Importmap para React -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.2.0",
+          "react-dom/client": "https://esm.sh/react-dom@19.2.0/client"
         }
       }
-    </style>
+    </script>
   </head>
 
   <body>
-    <!-- Glitter Background -->
     <div class="sparkle-container" id="sparkles"></div>
 
-    <!-- React Root -->
+    <!-- React se monta acá -->
     <div id="root" class="relative z-10"></div>
 
-    <!-- React (CDN) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-    <!-- Sparkle Generator -->
+    <!-- Sparkles -->
     <script>
       const container = document.getElementById("sparkles");
       const sparkleCount = 120;
@@ -92,7 +90,7 @@
       }
     </script>
 
-    <!-- Your App -->
-    <script src="./app.js"></script>
+    <!-- Cargar tu app.js -->
+    <script type="module" src="./app.js"></script>
   </body>
 </html>
