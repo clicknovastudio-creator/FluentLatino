@@ -163,10 +163,6 @@ function renderCoach() {
   });
 }
 
-
-  document.getElementById("btnBack").addEventListener("click", renderHome);
-}
-
 function renderVocabulary() {
   root.innerHTML = `
     <div class="min-h-screen flex flex-col px-6 py-8 text-white">
