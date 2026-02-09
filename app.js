@@ -205,48 +205,186 @@ micBtn.addEventListener("click", () => {
 }
 
 function renderVocabulary() {
-  root.innerHTML = `
-    <div class="min-h-screen flex flex-col px-6 py-8 text-white">
+  const topics = {
+    "Food & Drinks": [
+      { word: "water", meaning: "agua" },
+      { word: "coffee", meaning: "café" },
+      { word: "tea", meaning: "té" },
+      { word: "bread", meaning: "pan" },
+      { word: "milk", meaning: "leche" },
+      { word: "juice", meaning: "jugo" },
+      { word: "breakfast", meaning: "desayuno" },
+      { word: "dinner", meaning: "cena" },
+      { word: "hungry", meaning: "hambriento" },
+      { word: "delicious", meaning: "delicioso" },
+      { word: "salt", meaning: "sal" },
+      { word: "sugar", meaning: "azúcar" }
+    ],
 
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-3xl font-bold">📚 Vocabulary Trainer</h1>
-        <button id="btnBack"
-          class="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-xl text-sm">
-          ⬅ Volver
-        </button>
-      </div>
+    "Travel": [
+      { word: "airport", meaning: "aeropuerto" },
+      { word: "passport", meaning: "pasaporte" },
+      { word: "ticket", meaning: "boleto" },
+      { word: "hotel", meaning: "hotel" },
+      { word: "reservation", meaning: "reserva" },
+      { word: "map", meaning: "mapa" },
+      { word: "train", meaning: "tren" },
+      { word: "bus", meaning: "colectivo" },
+      { word: "taxi", meaning: "taxi" },
+      { word: "luggage", meaning: "equipaje" },
+      { word: "trip", meaning: "viaje" },
+      { word: "vacation", meaning: "vacaciones" }
+    ],
 
-      <div class="bg-white/10 backdrop-blur-lg p-6 rounded-3xl shadow-xl border border-white/20 flex-1">
+    "Work & Office": [
+      { word: "meeting", meaning: "reunión" },
+      { word: "boss", meaning: "jefe" },
+      { word: "colleague", meaning: "compañero de trabajo" },
+      { word: "schedule", meaning: "horario" },
+      { word: "deadline", meaning: "fecha límite" },
+      { word: "salary", meaning: "salario" },
+      { word: "interview", meaning: "entrevista" },
+      { word: "resume", meaning: "currículum" },
+      { word: "email", meaning: "correo" },
+      { word: "presentation", meaning: "presentación" },
+      { word: "project", meaning: "proyecto" },
+      { word: "promotion", meaning: "ascenso" }
+    ]
+  };
 
-        <p class="text-lg mb-4 opacity-90">Practicá palabras esenciales para principiantes.</p>
+  let selectedTopic = Object.keys(topics)[0];
+  let visibleCount = 6;
 
-        <div class="grid gap-4">
-          <div class="bg-white/10 p-4 rounded-2xl">
-            <p class="text-xl font-bold">Hello</p>
-            <p class="opacity-80">Hola</p>
-          </div>
+  function renderList() {
+    const words = topics[selectedTopic].slice(0, visibleCount);
 
-          <div class="bg-white/10 p-4 rounded-2xl">
-            <p class="text-xl font-bold">Thank you</p>
-            <p class="opacity-80">Gracias</p>
-          </div>
+    root.innerHTML = `
+      <div class="min-h-screen flex flex-col px-6 py-8 text-white">
 
-          <div class="bg-white/10 p-4 rounded-2xl">
-            <p class="text-xl font-bold">How are you?</p>
-            <p class="opacity-80">¿Cómo estás?</p>
-          </div>
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-3xl font-bold">📚 Vocabulary Trainer</h1>
+          <button id="btnBack"
+            class="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-xl text-sm">
+            ⬅ Volver
+          </button>
         </div>
 
-        <p class="text-xs opacity-70 mt-6">
-          Próximo paso: agregar quizzes interactivos.
-        </p>
+        <div class="bg-white/10 backdrop-blur-lg p-6 rounded-3xl shadow-xl border border-white/20 flex-1">
 
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
+            <div>
+              <p class="text-sm opacity-80 mb-2">Seleccioná un Topic:</p>
+              <select id="topicSelect"
+                class="px-4 py-3 rounded-xl text-black font-semibold w-full md:w-auto">
+                ${Object.keys(topics)
+                  .map(
+                    (topic) =>
+                      `<option value="${topic}" ${
+                        topic === selectedTopic ? "selected" : ""
+                      }>${topic}</option>`
+                  )
+                  .join("")}
+              </select>
+            </div>
+
+            <div class="flex gap-3">
+              <button id="btnCopy"
+                class="bg-purple-500 hover:bg-purple-600 transition px-4 py-3 rounded-xl font-semibold shadow-lg">
+                📋 Copy List
+              </button>
+
+              <button id="btnPDF"
+                class="bg-white/15 hover:bg-white/25 transition px-4 py-3 rounded-xl font-semibold">
+                🧾 Export PDF
+              </button>
+            </div>
+
+          </div>
+
+          <p class="text-sm opacity-80 mb-4">
+            Mostrando <span class="font-bold">${words.length}</span> palabras de <span class="font-bold">${topics[selectedTopic].length}</span>
+          </p>
+
+          <div id="vocabList" class="grid gap-4">
+            ${words
+              .map(
+                (w) => `
+                  <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
+                    <p class="text-xl font-bold">${w.word}</p>
+                    <p class="opacity-80">${w.meaning}</p>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+
+          <p class="text-xs opacity-70 mt-6">
+            📌 Tip: bajá hacia abajo para cargar más palabras automáticamente.
+          </p>
+
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  document.getElementById("btnBack").addEventListener("click", renderHome);
+    document.getElementById("btnBack").addEventListener("click", renderHome);
+
+    document.getElementById("topicSelect").addEventListener("change", (e) => {
+      selectedTopic = e.target.value;
+      visibleCount = 6;
+      renderList();
+    });
+
+    document.getElementById("btnCopy").addEventListener("click", () => {
+      const text = words.map((w) => `${w.word} - ${w.meaning}`).join("\n");
+      navigator.clipboard.writeText(text);
+      alert("✅ Vocabulary copied!");
+    });
+
+    document.getElementById("btnPDF").addEventListener("click", () => {
+      if (!window.jspdf) {
+        alert("jsPDF no está cargado.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text(`Vocabulary List - ${selectedTopic}`, 10, 15);
+
+      doc.setFontSize(12);
+
+      let y = 30;
+      words.forEach((w, index) => {
+        doc.text(`${index + 1}. ${w.word} - ${w.meaning}`, 10, y);
+        y += 8;
+
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+      });
+
+      doc.save(`Vocabulary-${selectedTopic}.pdf`);
+    });
+
+    // Infinite scroll
+    window.onscroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200
+      ) {
+        if (visibleCount < topics[selectedTopic].length) {
+          visibleCount += 4;
+          renderList();
+        }
+      }
+    };
+  }
+
+  renderList();
 }
+
 
 function renderConversation() {
   root.innerHTML = `
